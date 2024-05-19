@@ -1,8 +1,8 @@
 const { network } = require("hardhat");
 
-async function deploy({ deployments, getNamedAccounts }) {    // { deployments, getNamedAccounts } destructures hre object
+async function deployFunc({ deployments, getNamedAccounts }) {    // { deployments, getNamedAccounts } destructures hre object
   const { deploy, log } = deployments;
   const { deployer } = getNamedAccounts()
   const chainId = network.config.chainId
 }
-module.exports.default = deploy;
+module.exports.default = deployFunc;
