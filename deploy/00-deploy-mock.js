@@ -7,7 +7,8 @@ async function deployFundMe({ deployments, getNamedAccounts }) {
   const { deployer } = await getNamedAccounts();
   const chainId = network.config.chainId;
 
-  if (developmentChains.includes(chainId.name)) {
+//   if (developmentChains.includes(chainId.name)) { // chainId.name doesn't exist
+  if (chainId == 31337) {
     await deploy("MockV3Aggregator", {
       contract: "MockV3Aggregator",
       log: true,
