@@ -19,6 +19,7 @@ module.exports = {
         url: SEPOLIA_RPC_URL,
         accounts: [PRIVATE_KEY],
         chainId: 11155111,
+        waitConfirmations: 6
     },
 },
   namedAccounts: {
