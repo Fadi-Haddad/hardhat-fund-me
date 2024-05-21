@@ -30,7 +30,11 @@ if compiling command returns an error "The library @chainlink/contracts is not i
     yarn add --dev @nomiclabs/hardhat-ethers hardhat-deploy-ethers ethers
     ```
     hardhat-deploy runs the scripts inside the deploy folder by order 
-5. deploy a specific contract using 'tag' like 'mock' for mock contract or 'all' for all contrtacts
+7. deploy a specific contract using 'tag' like 'mock' for mock contract or 'all' for all contrtacts
     ```sh
     yarn hardhat deploy --tags mock
+    ```
+8. clean artifacts and cache folders:
+    ```sh
+    yarn hardhat clean
     ```
