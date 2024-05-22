@@ -22,6 +22,9 @@ contract FundMe {
         i_owner = msg.sender;
         priceFeed = AggregatorV3Interface(priceFeedAddress);
     }
+    function getPriceFeed() public view returns (AggregatorV3Interface) {
+        return priceFeed;
+    }
 
     function fund() public payable {
         require(msg.value.getConversionRate(priceFeed) >= MINIMUM_USD, "You need to spend more ETH!");

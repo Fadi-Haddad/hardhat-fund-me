@@ -10,7 +10,7 @@ describe("FundMe", function(){
         await deployments.fixture(["all"]);    // to wait for all deployments with 'all' tag to deploy
 
         deployer = (await getNamedAccounts()).deployer; //gets a list of accounts in networkConfig(accounts) inside hardhat.config.js
-
+        console.log(deployer, "deployer")
         const fundMeContract = await deployments.get("FundMe");
 
         // fundMe = await ethers.getContract("FundMe", deployer); // whenever we call a function from fundme, it will be connected with deployer
@@ -19,17 +19,20 @@ describe("FundMe", function(){
             fundMeContract.abi,
             fundMeContract.address
           );
-        MockV3AggregatorContract = await deployments.get("MockV3Aggregator");
+        console.log(fundMeContract.address, "fundMeContract.address")
+        const MockV3AggregatorContract = await deployments.get("MockV3Aggregator");
         MockV3Aggregator= await ethers.getContractAt(
-            MockV3Aggregator.abi,
-            MockV3Aggregator.address
+            MockV3AggregatorContract.abi,
+            MockV3AggregatorContract.address
           );
+          console.log(MockV3AggregatorContract.address, "MockV3AggregatorContract.address")
         });
 
     describe("constructor", async function() {
         it("sets the aggregator addresses correctly",async function(){
-            const response  = await fundMe.priceFeed();
-            assert.equal(response, MockV3Aggregator.address)
+            const response  = await fundMe.getPriceFeed();
+            console.log("Actual priceFeed address:", response);
+            assert.equal(response, MockV3Aggregator.address); // Update this line
         })
     })
 })
