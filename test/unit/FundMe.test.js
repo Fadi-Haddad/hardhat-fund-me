@@ -4,6 +4,7 @@ const { assert } = require("chai")
 describe("FundMe", function(){
     let MockV3Aggregator
     let fundMe
+    let MockV3AggregatorContract
     beforeEach(async function(){                // before testing constructor we should deploy the contract by calling the deployment scripts inside deploy folder
                                                // to do that we need the deployments object from hardhat
 
@@ -20,7 +21,8 @@ describe("FundMe", function(){
             fundMeContract.address
           );
         console.log(fundMeContract.address, "fundMeContract.address")
-        const MockV3AggregatorContract = await deployments.get("MockV3Aggregator");
+
+        MockV3AggregatorContract = await deployments.get("MockV3Aggregator");
         MockV3Aggregator= await ethers.getContractAt(
             MockV3AggregatorContract.abi,
             MockV3AggregatorContract.address
@@ -32,7 +34,7 @@ describe("FundMe", function(){
         it("sets the aggregator addresses correctly",async function(){
             const response  = await fundMe.getPriceFeed();
             console.log("Actual priceFeed address:", response);
-            assert.equal(response, MockV3Aggregator.address); // Update this line
+            assert.equal(response, MockV3AggregatorContract.address); // Update this line
         })
     })
 })
