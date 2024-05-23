@@ -17,7 +17,6 @@ async function deployFundMe({ deployments, getNamedAccounts }) {
         ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"]
     }
 
-
     const fundMe = await deploy("FundMe", {
       from: deployer,
       args: [ethUsdPriceFeedAddress],
