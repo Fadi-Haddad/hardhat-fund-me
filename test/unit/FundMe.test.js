@@ -5,8 +5,9 @@ describe("FundMe", function(){
     let MockV3Aggregator
     let fundMe
     let MockV3AggregatorContract
-    beforeEach(async function(){                // before testing constructor we should deploy the contract by calling the deployment scripts inside deploy folder
-                                               // to do that we need the deployments object from hardhat
+    beforeEach(async function(){                // before testing constructor we should deploy the contract by calling the deployment
+
+                                               // scripts inside deploy folder to do that we need the deployments object from hardhat
 
         await deployments.fixture(["all"]);    // to wait for all deployments with 'all' tag to deploy
 
@@ -34,7 +35,7 @@ describe("FundMe", function(){
         it("sets the aggregator addresses correctly",async function(){
             const response  = await fundMe.getPriceFeed();
             console.log("Actual priceFeed address:", response);
-            assert.equal(response, MockV3AggregatorContract.address); // Update this line
+            assert.equal(response, MockV3AggregatorContract.address);
         })
     })
 })
