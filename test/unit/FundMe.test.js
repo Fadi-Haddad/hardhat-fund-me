@@ -5,6 +5,8 @@ describe("FundMe", function(){
     let MockV3Aggregator
     let fundMe
     let MockV3AggregatorContract
+    const sentValue = ethers.utils.parseEther("1");
+
     beforeEach(async function(){                // before testing constructor we should deploy the contract by calling the deployment
 
                                                // scripts inside deploy folder to do that we need the deployments object from hardhat
@@ -38,6 +40,12 @@ describe("FundMe", function(){
     describe("fund", async function() {
         it("Fails if the amount sent is not enough",async function(){
             await expect(fundMe.fund()).to.be.revertedWith("You need to spend more money") //test SHOULD fail, what matters is that it doesn't break
+        })
+        it("sends the amout from the sender account and update the 'addressToAmountFunded' mapping",async function(){
+            await fundMe.fund({value : sentValue}); //transaction Object doesn't need the sender address as it has the deployer address as sender
+                                                    // any payable function needs two params(sender and amount) 
+            const response  =await fundMe.addressToAmountFunded(deployer)
+            assert.equal(response.toString(), sentValue.toString())
         })
     })
 })
