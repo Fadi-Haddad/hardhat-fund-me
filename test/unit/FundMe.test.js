@@ -52,5 +52,24 @@ describe("FundMe", function(){
             const lastFunder = await fundMe.funders(0)
             assert.equal(lastFunder, deployer)
         })
+        
+    })
+    describe("withdraw", async function() {
+        beforeEach(async function (){
+            await fundMe.fund({value : sentValue}); // before testing, we should fund the contract with money from deployer
+        })
+        it("Withdraws money from sent deployer",async function(){ 
+            const initialDeployerBalance = await fundMe.provider.getBalance(deployer);
+            const initialContractBalance = await fundMe.provider.getBalance(fundMe.address);
+            
+            const transactionResponse  = await fundMe.withdraw()
+            const transactionReceipt   = await transactionResponse.wait(1)
+            
+            const finalDeployerBalance = await fundMe.provider.getBalance(deployer);
+            const finalContractBalance = await fundMe.provider.getBalance(fundMe.address);
+
+            assert.equal(finalContractBalance.toString(),0)
+
+        })
     })
 })
