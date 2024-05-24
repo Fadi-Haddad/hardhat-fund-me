@@ -39,9 +39,9 @@ describe("FundMe", function(){
     })
     describe("fund", async function() {
         it("Fails if the amount sent is not enough",async function(){
-            await expect(fundMe.fund()).to.be.revertedWith("You need to spend more money") //test SHOULD fail, what matters is that it doesn't break
+            await expect(fundMe.fund()).to.be.revertedWith("You need to spend more ETH!") 
         })
-        it("sends the amout from the sender account and update the 'addressToAmountFunded' mapping",async function(){
+        it("sends the amout from the sender account and updates the 'addressToAmountFunded' mapping",async function(){
             await fundMe.fund({value : sentValue}); //transaction Object doesn't need the sender address as it has the deployer address as sender
                                                     // any payable function needs two params(sender and amount) 
             const response  =await fundMe.addressToAmountFunded(deployer)
