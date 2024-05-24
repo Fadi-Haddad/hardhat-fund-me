@@ -41,11 +41,16 @@ describe("FundMe", function(){
         it("Fails if the amount sent is not enough",async function(){
             await expect(fundMe.fund()).to.be.revertedWith("You need to spend more ETH!") 
         })
-        it("sends the amout from the sender account and updates the 'addressToAmountFunded' mapping",async function(){
+        it("Sends the amout from the sender account and updates the 'addressToAmountFunded' mapping",async function(){
             await fundMe.fund({value : sentValue}); //transaction Object doesn't need the sender address as it has the deployer address as sender
                                                     // any payable function needs two params(sender and amount) 
             const response  =await fundMe.addressToAmountFunded(deployer)
             assert.equal(response.toString(), sentValue.toString())
+        })
+        it("Adds the sender to the funders array",async function(){
+            await fundMe.fund({value : sentValue}); 
+            const lastFunder = await fundMe.funders(0)
+            assert.equal(lastFunder, deployer)
         })
     })
 })
