@@ -69,7 +69,7 @@ describe("FundMe", function(){
             const finalContractBalance = await fundMe.provider.getBalance(fundMe.address);
 
             assert.equal(finalContractBalance.toString(),0)
-
+            assert.equal(initialContractBalance.add(initialDeployerBalance).toString(),finalDeployerBalance.toString())
         })
     })
 })
