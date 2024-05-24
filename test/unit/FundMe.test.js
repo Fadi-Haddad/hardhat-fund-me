@@ -64,12 +64,15 @@ describe("FundMe", function(){
             
             const transactionResponse  = await fundMe.withdraw()
             const transactionReceipt   = await transactionResponse.wait(1)
-            
+
+            const {gasUsed, effectiveGasPrice } = transactionReceipt // receipt object has many properties....
+            const gasCost = gasUsed*(effectiveGasPrice)
+
             const finalDeployerBalance = await fundMe.provider.getBalance(deployer);
             const finalContractBalance = await fundMe.provider.getBalance(fundMe.address);
 
-            assert.equal(finalContractBalance.toString(),0)
-            assert.equal(initialContractBalance.add(initialDeployerBalance).toString(),finalDeployerBalance.toString())
+            assert.equal(finalContractBalance.toString(),0 )
+            assert.equal(initialContractBalance.add(initialDeployerBalance).toString(),finalDeployerBalance.add(gasCost).toString())
         })
     })
 })
