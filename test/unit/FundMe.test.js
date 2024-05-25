@@ -58,7 +58,7 @@ describe("FundMe", function(){
         beforeEach(async function (){
             await fundMe.fund({value : sentValue}); // before testing, we should fund the contract with money from deployer
         })
-        it("Withdraws money from sent deployer",async function(){ 
+        it("Withdraws money sent from deployer",async function(){ 
             const initialDeployerBalance = await fundMe.provider.getBalance(deployer);
             const initialContractBalance = await fundMe.provider.getBalance(fundMe.address);
             
@@ -73,6 +73,31 @@ describe("FundMe", function(){
 
             assert.equal(finalContractBalance.toString(),0 )
             assert.equal(initialContractBalance.add(initialDeployerBalance).toString(),finalDeployerBalance.add(gasCost).toString())
+        })
+        it("Withdraws money from multiple donors",async function(){ 
+            
+            const donors = await ethers.getSigners(); // first get a list of senders from ethers.getSigners()
+
+            for (let i=1; i< 6; i++){ // then for each donor, we should connect to contract and send the money.
+                const fundMeConntectedContract = await fundMe.connect(donors[i]);
+                await fundMeConntectedContract.fund({value: sentValue});
+            }
+            const initialDeployerBalance = await fundMe.provider.getBalance(deployer);
+            const initialContractBalance = await fundMe.provider.getBalance(fundMe.address);
+            
+            const transactionResponse  = await fundMe.withdraw()
+            const transactionReceipt   = await transactionResponse.wait(1)
+
+            const {gasUsed, effectiveGasPrice } = transactionReceipt // receipt object has many properties....
+            const gasCost = gasUsed*(effectiveGasPrice)
+
+            const finalDeployerBalance = await fundMe.provider.getBalance(deployer);
+            const finalContractBalance = await fundMe.provider.getBalance(fundMe.address);
+
+            assert.equal(finalContractBalance.toString(),0 );
+            assert.equal(initialContractBalance.add(initialDeployerBalance).toString(),finalDeployerBalance.add(gasCost).toString());
+
+            
         })
     })
 })
