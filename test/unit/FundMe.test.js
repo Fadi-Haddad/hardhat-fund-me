@@ -76,7 +76,7 @@ describe("FundMe", function(){
         })
         it("Withdraws money from multiple donors",async function(){ 
             
-            const donors = await ethers.getSigners(); // first get a list of senders from ethers.getSigners()
+            const donors = await ethers.getSigners(); // first get of an array of donors from ethers.getSigners()
 
             for (let i=1; i< 6; i++){ // then for each donor, we should connect to contract and send the money.
                 const fundMeConntectedContract = await fundMe.connect(donors[i]);
@@ -97,7 +97,13 @@ describe("FundMe", function(){
             assert.equal(finalContractBalance.toString(),0 );
             assert.equal(initialContractBalance.add(initialDeployerBalance).toString(),finalDeployerBalance.add(gasCost).toString());
 
-            
+            // test that the funders array is empty by expecting that attempting to get the first value will revert..
+            await expect (fundMe.funders(0)).to.be.reverted
+
+            // assert that the amounts inside the mapping are empty after withdrawal (amount and not addresses)
+            for(let i=1; i<6; i++){ //iterate over donors array and assert that the amount the donor sent is zero
+                assert.equal(await fundMe.addressToAmountFunded(donors[i].address), 0);
+            }
         })
     })
 })
