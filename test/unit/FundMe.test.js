@@ -105,5 +105,12 @@ describe("FundMe", function(){
                 assert.equal(await fundMe.addressToAmountFunded(donors[i].address), 0);
             }
         })
+        it("Shouldn't allow someone other than the owner to withdraw the moeny", async function(){
+            const accounts = ethers.getSigners();
+            const attacker = accounts[1];
+            const conntectedContract = await fundMe.connect(attacker);
+            await expect(conntectedContract.withdraw()).to.be.reverted
+
+        })
     })
 })
