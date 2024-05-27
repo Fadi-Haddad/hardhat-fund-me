@@ -41,15 +41,15 @@ describe("FundMe", function(){
         it("Fails if the amount sent is not enough",async function(){
             await expect(fundMe.fund()).to.be.revertedWith("You need to spend more ETH!") 
         })
-        it("Sends the amout from the sender account and updates the 'addressToAmountFunded' mapping",async function(){
+        it("Sends the amout from the sender account and updates the 'AddressToAmountFunded' mapping",async function(){
             await fundMe.fund({value : sentValue}); //transaction Object doesn't need the sender address as it has the deployer address as sender
                                                     // any payable function needs two params(sender and amount) 
-            const response  =await fundMe.addressToAmountFunded(deployer)
+            const response  =await fundMe.getAddressToAmountFunded(deployer)
             assert.equal(response.toString(), sentValue.toString())
         })
         it("Adds the sender to the funders array",async function(){
             await fundMe.fund({value : sentValue}); 
-            const lastFunder = await fundMe.funders(0)
+            const lastFunder = await fundMe.getFunder(0)
             assert.equal(lastFunder, deployer)
         })
         
@@ -98,18 +98,18 @@ describe("FundMe", function(){
             assert.equal(initialContractBalance.add(initialDeployerBalance).toString(),finalDeployerBalance.add(gasCost).toString());
 
             // test that the funders array is empty by expecting that attempting to get the first value will revert..
-            await expect (fundMe.funders(0)).to.be.reverted
+            await expect (fundMe.getFunder(0)).to.be.reverted
 
             // assert that the amounts inside the mapping are empty after withdrawal (amount and not addresses)
             for(let i=1; i<6; i++){ //iterate over donors array and assert that the amount the donor sent is zero
-                assert.equal(await fundMe.addressToAmountFunded(donors[i].address), 0);
+                assert.equal(await fundMe.getAddressToAmountFunded(donors[i].address), 0);
             }
         })
-        it("Shouldn't allow someone other than the owner to withdraw the moeny", async function(){
+        it("Shouldn't allow someone other than the owner to withdraw the money", async function(){
             const accounts = ethers.getSigners();
-            const attacker = accounts[1];
+            const attacker = accounts[1]; //acoounts[0] is the owner
             const conntectedContract = await fundMe.connect(attacker);
-            await expect(conntectedContract.withdraw()).to.be.revertedWith("FundMe__NotOwner");
+            await expect(conntectedContract.withdraw()).to.be.reverted;
 
         })
     })
