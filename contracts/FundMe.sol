@@ -9,11 +9,11 @@ error NotOwner();
 contract FundMe {
     using PriceConverter for uint256;
 
-    mapping(address => uint256) public addressToAmountFunded;
-    address[] public funders;
+    mapping(address => uint256) private addressToAmountFunded;
+    address[] private funders;
 
     // Could we make this constant?  /* hint: no! We should make it immutable! */
-    address public /* immutable */ i_owner;
+    address private /* immutable */ i_owner;
     uint256 public constant MINIMUM_USD = 50 * 10 ** 18;
 
     AggregatorV3Interface public priceFeed;
@@ -78,6 +78,15 @@ contract FundMe {
 
     receive() external payable {
         fund();
+    }
+    function getOwner() public view returns(address) {
+        return i_owner;
+    }
+    function getFunder(uint256 index) public view returns(address) {
+        return funders[index];
+    }
+    function getAddressToAmountFunded(address _address) public view returns(uint256) {
+        return addressToAmountFunded[_address];
     }
 
 }
